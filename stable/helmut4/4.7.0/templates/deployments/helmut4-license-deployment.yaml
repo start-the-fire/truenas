@@ -17,6 +17,11 @@ spec:
     spec:
       imagePullSecrets:
       - name: public.repo.moovit24.de
+      volumes: {{ include "common.storage.configureAppVolumes" .Values | nindent 8 }}
+      {{ range $index, $hostPathConfiguration := .Values.extraAppVolumeMounts }}
+        - name: homefolder-1
+          hostPath:
+            path: {{ .Values.extraAppVolumeMountsSnapshotVersion.hostPath }}
       hostAliases:
       - ip: "127.0.0.1"
         hostnames:
@@ -25,10 +30,13 @@ spec:
       - name: {{ .Values.appname }}-license
         image: "{{ .Values.images.mcc_license.name }}:{{ .Values.images.mcc_license.version }}"
         imagePullPolicy: {{ .Values.images.mcc_license.pullPolicy }}
+        volumeMounts: {{ include "common.storage.configureAppVolumeMountsInContainer" .Values | nindent 12 }}
+        - name: homefolder-1
+          mountPath: "/version"
         resources: 
 {{- include "containerResources" . | indent 10 }}        
 {{- include "helmut.args" . | indent 8 }}        
         env:
         - name: parameters
-          value: |-           
-{{- include "helmut.env" . | indent 12}}
+          value: |-
+{{- include "helmut.env" . | indent 12 }}

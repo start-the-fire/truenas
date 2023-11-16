@@ -70,6 +70,20 @@ questions:
           schema:
             type: hostpath
             required: true
+  - variable: extraAppVolumeMountsSnapshotVersion
+    label: "Helmut4 folder containing helmut4.snapshot File"
+    group: "Storage"
+    description: "Add a home folder for Helmut4 License that contains helmut4.snapshot File"
+    schema:
+      type: dict
+      required: true
+      attrs:
+        - variable: hostPath
+          label: "Host Path"
+          description: "The path on your TrueNAS"
+          schema:
+            type: hostpath
+            required: true
 
   - variable: nodePorts
     description: "Networking Configuration"
