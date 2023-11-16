@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.appname }}-panel
+  labels:
+    app: {{ .Values.appname }}
+    component: panel
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Values.appname }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.appname }}
+        component: panel
+    spec:
+      imagePullSecrets:
+      - name: public.repo.moovit24.de
+      hostAliases:
+      - ip: "127.0.0.1"
+        hostnames:
+        - "{{ .Values.appname }}-panel"            
+      containers:
+      - name: {{ .Values.appname }}-panel
+        image: "{{ .Values.images.mcp_hp.name }}:{{ .Values.images.mcp_hp.version }}"
+        imagePullPolicy: {{ .Values.images.mcp_hp.pullPolicy }}
+        resources: 
+{{- include "containerResources" . | indent 10 }}

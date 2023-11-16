@@ -1,0 +1,16 @@
+apiVersion: v1                       
+kind: Service                        
+metadata:                            
+ name: {{ .Values.appname }}-fx
+ labels:
+   app: {{ .Values.appname }}
+   component: fx
+spec:                                
+ type: ClusterIP 
+ selector:                          
+   app: {{ .Values.appname }}
+   component: fx
+ ports:                             
+   - name:                      
+     port: 8100
+     targetPort: 8100

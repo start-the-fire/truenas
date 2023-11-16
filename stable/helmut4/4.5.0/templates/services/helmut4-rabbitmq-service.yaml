@@ -1,0 +1,25 @@
+apiVersion: v1                       
+kind: Service                        
+metadata:                            
+ name: {{ .Values.appname }}-rabbitmq
+ labels:
+   app: {{ .Values.appname }}
+   component: rabbitmq
+spec:                                
+ type: ClusterIP 
+ selector:                          
+   app: {{ .Values.appname }}
+   component: rabbitmq
+ ports:                             
+  - name: rabbitmq-prometheus
+    port: 15692
+    targetPort: 15692
+  - name: rabbitmq-webstomp
+    port: 15674
+    targetPort: 15674
+  - name: rabbitmq-management
+    port: 15672
+    targetPort: 15672
+  - name: rabbitmq
+    port: 5672
+    targetPort: 5672

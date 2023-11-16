@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.appname}}-rabbitmq
+data:
+  rabbitmq.conf: |-
+    listeners.tcp.default = 5672
+    management.tcp.port = 15672
+    management.load_definitions = /etc/rabbitmq/definitions.json
+    management.path_prefix = /rabbitmq
+
+    auth_backends.1 = internal
+    auth_backends.2 = rabbit_auth_backend_http
+
+    auth_http.http_method   = post
+ {{printf "auth_http.user_path = http://%s-users:8000/v1/members/auth/rabbitmq/user" .Values.appname | indent 4 }}
+ {{printf "auth_http.vhost_path = http://%s-users:8000/v1/members/auth/rabbitmq/vhost" .Values.appname | indent 4 }}
+ {{printf "auth_http.resource_path = http://%s-users:8000/v1/members/auth/rabbitmq/resource" .Values.appname | indent 4 }}
+ {{printf "auth_http.topic_path = http://%s-users:8000/v1/members/auth/rabbitmq/topic" .Values.appname | indent 4 }}

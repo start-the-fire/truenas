@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.appname }}-mongodb
+  labels:
+    app: {{ .Values.appname }}
+    component: mongodb
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Values.appname }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.appname }}
+        component: mongodb
+    spec:
+      imagePullSecrets:
+      - name: public.repo.moovit24.de
+      hostAliases:
+      - ip: "127.0.0.1"
+        hostnames:
+        - "{{ .Values.appname }}-mongodb"            
+      containers:
+      - name: {{ .Values.appname }}-mongodb
+        image: "{{ .Values.images.mcc_mongodb.name }}:{{ .Values.images.mcc_mongodb.version }}"
+        imagePullPolicy: {{ .Values.images.mcc_mongodb.pullPolicy }}
+        resources: 
+{{- include "containerResources" . | indent 10 }}        
+        env:
+        - name: MONGO_INITDB_ROOT_USERNAME
+          value: {{ .Values.mongodbSettings.username }}
+        - name: MONGO_INITDB_ROOT_PASSWORD
+          value: {{ .Values.mongodbSettings.password }}
+        volumeMounts: {{ include "common.storage.configureAppVolumeMountsInContainer" .Values | nindent 12 }}
+        - mountPath: /data/db
+          name: mongodb-storage
+      volumes: {{ include "common.storage.configureAppVolumes" .Values | nindent 8 }}
+        - name: mongodb-storage
+          hostPath:
+            path: {{ .Values.extraAppVolumeDatabase.hostPath }}

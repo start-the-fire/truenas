@@ -1,0 +1,72 @@
+{
+    "charts": {},
+    "test": {},
+    "stable": {
+        "helmut4": {
+            "app_readme": "<p>Helmut4 is the project manager that helps you keep track of all your projects, templates, preferences and profiles of Adobe Premiere Pro and After Effects supplied by MoovIT GmbH, for more information visit the manual: <a href=\"https://docs.helmut.de/helmut4-releases/\">https://docs.helmut.de/helmut4-releases/</a><p>",
+            "categories": [
+                "media"
+            ],
+            "description": "Helmut4 is the project manager that helps you keep track of all your projects, templates, preferences and profiles of Adobe Premiere Pro and After Effects",
+            "healthy": true,
+            "healthy_error": null,
+            "home": "https://helmut.de",
+            "location": "https://github.com/moovit-sp-gmbh/helmut4-helm/tree/truenas/stable/helmut4",
+            "latest_version": "4.7.0",
+            "latest_app_version": "4.7.0",
+            "latest_human_version": "4.7.0",
+            "last_update": "2023-11-10 16:20:00",
+            "name": "helmut4",
+            "recommended": false,
+            "title": "Helmut4",
+            "maintainers": [
+                {
+                    "email": "support@moovit.de",
+                    "name": "MoovIT GmbH",
+                    "url": "https://www.moovit.de"
+                }
+            ],
+            "tags": [],
+            "screenshots": [],
+            "sources": [
+                "https://github.com/moovit-sp-gmbh/helmut4-helm/tree/truenas/stable/helmut4"
+            ],
+            "icon_url": "https://support.helmut.de/wp-content/uploads/2021/07/H.png"
+        },
+        "helmut4client": {
+            "app_readme": "<p>Helmut4 is the project manager that helps you keep track of all your projects, templates, preferences and profiles of Adobe Premiere Pro and After Effects supplied by MoovIT GmbH, for more information visit the manual: <a href=\"https://docs.helmut.de/helmut4-releases/\">https://docs.helmut.de/helmut4-releases/</a><p>",
+            "categories": [
+                "media"
+            ],
+            "description": "Helmut4 is the project manager that helps you keep track of all your projects, templates, preferences and profiles of Adobe Premiere Pro and After Effects",
+            "healthy": true,
+            "healthy_error": null,
+            "home": "https://helmut.de",
+            "location": "https://github.com/moovit-sp-gmbh/helmut4-helm/tree/truenas/stable/helmut4client",
+            "latest_version": "4.7.0",
+            "latest_app_version": "4.7.0",
+            "latest_human_version": "4.7.0",
+            "last_update": "2023-11-10 16:20:00",
+            "name": "helmut4client",
+            "recommended": false,
+            "title": "Helmut4 Client",
+            "maintainers": [
+                {
+                    "email": "support@moovit.de",
+                    "name": "MoovIT GmbH",
+                    "url": "https://www.moovit.de"
+                }
+            ],
+            "tags": [],
+            "screenshots": [],
+            "sources": [
+                "https://github.com/moovit-sp-gmbh/helmut4-helm/tree/truenas/stable/helmut4client"
+            ],
+            "icon_url": "https://support.helmut.de/wp-content/uploads/2021/07/H.png"
+        }
+    },
+    "dependency": {},
+    "enterprise": {},
+    "operators": {},
+    "incubator": {}
+}

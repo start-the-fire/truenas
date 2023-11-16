@@ -1,0 +1,16 @@
+apiVersion: v1                       
+kind: Service                        
+metadata:                            
+ name: {{ .Values.appname }}-license
+ labels:
+   app: {{ .Values.appname }}
+   component: license
+spec:                                
+ type: ClusterIP 
+ selector:                          
+   app: {{ .Values.appname }}
+   component: license
+ ports:                             
+   - name:                      
+     port: 8006
+     targetPort: 8006

@@ -1,0 +1,21 @@
+
+apiVersion: v2
+appVersion: "4.6.1"
+dependencies:
+- name: common
+  repository: file://../../../library/common/2112.0.0
+  version: 2112.0.0
+description: Helmut4 Client
+home: https://github.com/moovit-sp-gmbh/helmut4-helm
+icon: https://support.helmut.de/wp-content/uploads/2021/07/H.png
+maintainers:
+- email: s.siebertz@moovit-sp.com
+  name: MoovIT Software Products GmbH
+  url: https://moovit-sp.com
+name: helmut4client
+type: application
+version: 4.6.1
+keywords:
+- helmut4 client
+sources:
+- https://github.com/moovit-sp-gmbh/helmut4-helm

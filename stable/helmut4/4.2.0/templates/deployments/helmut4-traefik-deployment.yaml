@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.appname }}-traefik
+  labels:
+    app: {{ .Values.appname }}
+    component: traefik
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Values.appname }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.appname }}
+        component: traefik
+    spec:
+      imagePullSecrets:
+      - name: public.repo.moovit24.de
+      hostAliases:
+      - ip: "127.0.0.1"
+        hostnames:
+        - "{{ .Values.appname }}-traefik"            
+      containers:
+      - name: {{ .Values.appname }}-traefik
+        image: "{{ .Values.images.mcc_traefik.name }}:{{ .Values.images.mcc_traefik.version }}"
+        imagePullPolicy: {{ .Values.images.mcc_traefik.pullPolicy }}
+        resources: 
+{{- include "containerResources" . | indent 10 }}        
+        volumeMounts:
+        - name: {{.Values.appname}}-traefik
+          mountPath: /etc/traefik/traefik.toml
+          subPath: traefik.toml
+      volumes:
+      - name: {{.Values.appname}}-traefik
+        configMap:
+          name: {{.Values.appname}}-traefik

@@ -1,0 +1,176 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.appname}}-traefik
+data:
+  traefik.toml: |-
+    [log]
+      level = "INFO"
+      format = "json"
+
+    [api]
+      dashboard = true
+      insecure = false
+
+    [metrics]
+      [metrics.prometheus]
+        entryPoint = "metrics"
+
+    [entryPoints]
+      [entryPoints.helmut]
+        address = ":80"
+      [entryPoints.metrics]
+        address = ":8082"
+
+    [providers]
+      [providers.file]
+        directory = "/etc/traefik"
+        watch = true
+        filename = "traefik.toml"
+
+    [http]
+      [http.routers]
+        [http.routers.fx]
+          rule = "PathPrefix(`/v1/fx`)"
+          service = "fx"
+        [http.routers.co]
+          rule = "PathPrefix(`/v1/co`)"
+          service = "co"
+        [http.routers.io]
+          rule = "PathPrefix(`/v1/io`)"
+          service = "io"
+        [http.routers.hk]
+          rule = "PathPrefix(`/v1/hk`)"
+          service = "hk"
+        [http.routers.members]
+          rule = "PathPrefix(`/v1/members`) || PathPrefix(`/v1/ws`)"
+          service = "members"
+        [http.routers.streams]
+          rule = "PathPrefix(`/v1/streams`) || PathPrefix(`/streamdesigner`)"
+          service = "streams"
+        [http.routers.preferences]
+          rule = "PathPrefix(`/v1/preferences`)"
+          service = "preferences"
+        [http.routers.metadata]
+          rule = "PathPrefix(`/v1/metadata`)"
+          service = "metadata"
+        [http.routers.logging]
+          rule = "PathPrefix(`/v1/logging`)"
+          service = "logging"
+        [http.routers.amqp]
+          rule = "PathPrefix(`/v1/amqp`)"
+          service = "amqp"
+        [http.routers.license]
+          rule = "PathPrefix(`/v1/license`) || PathPrefix(`/v1/client`)"
+          service = "license"
+        [http.routers.language]
+          rule = "PathPrefix(`/v1/language`)"
+          service = "language"
+        [http.routers.languages]
+          rule = "PathPrefix(`/v1/languages`)"
+          service = "language"
+        [http.routers.cronjob]
+          rule = "PathPrefix(`/v1/cronjob`)"
+          service = "cronjob"
+        [http.routers.rabbitmqWebstomp]
+          rule = "PathPrefix(`/ws`)"
+          service = "rabbitmqWebstomp"
+        [http.routers.panel]
+          rule = "PathPrefix(`/panel`)"
+          service = "hp"
+
+        [http.routers.traefikDashboard]
+          rule = "PathPrefix(`/dashboard`) || PathPrefix(`/api`)"
+          middlewares = ["dashboardAuth"]
+          service = "api@internal"
+
+        [http.routers.mongoadmin]
+          rule = "PathPrefix(`/mongodb`)"
+          service = "mongoadmin"
+
+        [http.routers.rabbitmqManagement]
+          rule = "PathPrefix(`/rabbitmq/`)"
+          service = "rabbitmqManagement"
+
+        [http.routers.web]
+          rule = "PathPrefix(`/`)"
+          service = "hw"
+
+      [http.middlewares]
+        [http.middlewares.dashboardAuth]
+          [http.middlewares.dashboardAuth.basicAuth]
+            users = ["admin:$apr1$mkxb4wca$mpaQ8zRWDH0.0S5tA/2Un1"]
+        
+      [http.services]
+        [http.services.fx]
+          [http.services.fx.loadBalancer]
+            [[http.services.fx.loadBalancer.servers]]            
+{{printf "url = \"http://%s-fx:8100\"" .Values.appname | indent 14}}
+        [http.services.co]
+          [http.services.co.loadBalancer]
+            [[http.services.co.loadBalancer.servers]]
+{{printf "url = \"http://%s-co:8101\"" .Values.appname | indent 14}}
+        [http.services.io]
+          [http.services.io.loadBalancer]
+            [[http.services.io.loadBalancer.servers]]
+{{printf "url = \"http://%s-io:8102\"" .Values.appname | indent 14}}
+        [http.services.hk]
+          [http.services.hk.loadBalancer]
+            [[http.services.hk.loadBalancer.servers]]
+{{printf "url = \"http://%s-hk:8103\"" .Values.appname | indent 14}}
+        [http.services.members]
+          [http.services.members.loadBalancer]
+            [[http.services.members.loadBalancer.servers]]
+{{printf "url = \"http://%s-users:8000\"" .Values.appname | indent 14}}
+        [http.services.streams]
+          [http.services.streams.loadBalancer]
+            [[http.services.streams.loadBalancer.servers]]
+{{printf "url = \"http://%s-streams:8001\"" .Values.appname | indent 14}}
+        [http.services.preferences]
+          [http.services.preferences.loadBalancer]
+            [[http.services.preferences.loadBalancer.servers]]
+{{printf "url = \"http://%s-preferences:8002\"" .Values.appname | indent 14}}
+        [http.services.metadata]
+          [http.services.metadata.loadBalancer]
+            [[http.services.metadata.loadBalancer.servers]]
+{{printf "url = \"http://%s-metadata:8003\"" .Values.appname | indent 14}}
+        [http.services.logging]
+          [http.services.logging.loadBalancer]
+            [[http.services.logging.loadBalancer.servers]]
+{{printf "url = \"http://%s-logging:8004\"" .Values.appname | indent 14}}
+        [http.services.amqp]
+          [http.services.amqp.loadBalancer]
+            [[http.services.amqp.loadBalancer.servers]]
+{{printf "url = \"http://%s-amqp:8005\"" .Values.appname | indent 14}}
+        [http.services.license]
+          [http.services.license.loadBalancer]
+            [[http.services.license.loadBalancer.servers]]
+{{printf "url = \"http://%s-license:8006\"" .Values.appname | indent 14}}
+        [http.services.language]
+          [http.services.language.loadBalancer]
+            [[http.services.language.loadBalancer.servers]]
+{{printf "url = \"http://%s-language:8007\"" .Values.appname | indent 14}}
+        [http.services.cronjob]
+          [http.services.cronjob.loadBalancer]
+            [[http.services.cronjob.loadBalancer.servers]]
+{{printf "url = \"http://%s-cronjob:8008\"" .Values.appname | indent 14}}
+        [http.services.rabbitmqWebstomp]
+          [http.services.rabbitmqWebstomp.loadBalancer]
+            [[http.services.rabbitmqWebstomp.loadBalancer.servers]]
+{{printf "url = \"http://%s-rabbitmq:15674\"" .Values.appname | indent 14}}
+        [http.services.rabbitmqManagement]
+          [http.services.rabbitmqManagement.loadBalancer]
+            [[http.services.rabbitmqManagement.loadBalancer.servers]]
+{{printf "url = \"http://%s-rabbitmq:15672\"" .Values.appname | indent 14}}
+        [http.services.hw]
+          [http.services.hw.loadBalancer]
+            [[http.services.hw.loadBalancer.servers]]
+{{printf "url = \"http://%s-web:8080\"" .Values.appname | indent 14}}
+        [http.services.hp]
+          [http.services.hp.loadBalancer]
+            [[http.services.hp.loadBalancer.servers]]
+{{printf "url = \"http://%s-panel:8081\"" .Values.appname | indent 14}}
+        [http.services.mongoadmin]
+          [http.services.mongoadmin.loadBalancer]
+            [[http.services.mongoadmin.loadBalancer.servers]]
+{{printf "url = \"http://%s-mongoadmin:8199\"" .Values.appname | indent 14}}

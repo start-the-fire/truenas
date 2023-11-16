@@ -1,0 +1,34 @@
+apiVersion: v1                       
+kind: Service                        
+metadata:                            
+ name: {{ .Values.appname }}-traefik
+ labels:
+   app: {{ .Values.appname }}
+   component: traefik
+spec:                                
+ type: NodePort 
+ selector:                          
+   app: {{ .Values.appname }}
+   component: traefik
+ ports:                             
+   - name:                      
+     port: 80
+     targetPort: 80
+     nodePort: {{ .Values.nodePorts.traefik.port }}
+---
+apiVersion: v1                       
+kind: Service                        
+metadata:                            
+ name: {{ .Values.appname }}-traefik-metrics
+ labels:
+   app: {{ .Values.appname }}
+   component: traefik
+spec:                                
+ type: ClusterIP 
+ selector:                          
+   app: {{ .Values.appname }}
+   component: traefik
+ ports:                             
+   - name: traefik-metrics                   
+     port: 8082
+     targetPort: 8082

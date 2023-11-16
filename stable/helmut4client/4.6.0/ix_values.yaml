@@ -1,0 +1,23 @@
+appname: helmut4-client
+
+containerResources:
+  resources:
+    requests:
+      memory: "200Mi"
+      cpu: "250m"
+    limits:
+      memory: "500Mi"
+      cpu: "500m"
+
+appVolumeMounts:
+
+images:
+  mcp_hc:
+    name: repo.moovit24.de:443/mcp_hc
+    version: 4.2.0.30
+    imagePullPolicy: IfNotPresent
+
+registryCredentials:
+  registry: repo.moovit24.de:443
+  username: moovit
+  password: public

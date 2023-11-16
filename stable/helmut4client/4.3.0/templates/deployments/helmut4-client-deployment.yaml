@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.appname }}-client
+  labels:
+    app: {{ .Values.appname }}
+    component: client
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Values.appname }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.appname }}
+        component: client
+    spec:
+      imagePullSecrets:
+      - name: public.repo.moovit24.de
+      volumes: {{ include "common.storage.configureAppVolumes" .Values | nindent 8 }}
+      {{ range $index, $hostPathConfiguration := .Values.extraAppVolumeMounts }}
+        - name: extrappvolume-{{ $index }}
+          hostPath:
+            path: {{ $hostPathConfiguration.hostPath }}
+      {{ end }} 
+        - name: homefolder-1
+          hostPath:
+            path: {{ .Values.extraAppVolumeMountsAutologin.hostPath }}
+      containers:
+      - name: {{ .Values.appname }}-client
+        image: "{{ .Values.images.mcp_hc.name }}:{{ .Values.images.mcp_hc.version }}"
+        imagePullPolicy: {{ .Values.images.mcp_hc.pullPolicy }}
+        volumeMounts: {{ include "common.storage.configureAppVolumeMountsInContainer" .Values | nindent 12 }}
+        {{ range $index, $hostPathConfiguration := .Values.extraAppVolumeMounts }}
+          - name: extrappvolume-{{ $index }}
+            mountPath: {{ $hostPathConfiguration.mountPath }}
+        {{ end }}   
+          - name: homefolder-1
+            mountPath: "/root/MoovIT GmbH/HelmutClient"
+        resources: 
+{{- include "containerResources" . | indent 10 }}        

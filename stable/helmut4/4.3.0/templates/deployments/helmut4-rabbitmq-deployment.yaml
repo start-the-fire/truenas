@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.appname }}-rabbitmq
+  labels:
+    app: {{ .Values.appname }}
+    component: rabbitmq
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Values.appname }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.appname }}
+        component: rabbitmq
+    spec:
+      imagePullSecrets:
+      - name: public.repo.moovit24.de
+      hostAliases:
+      - ip: "127.0.0.1"
+        hostnames:
+        - "{{ .Values.appname }}-rabbitmq"            
+      containers:
+      - name: {{ .Values.appname }}-rabbitmq
+        image: "{{ .Values.images.mcc_rabbitmq.name }}:{{ .Values.images.mcc_rabbitmq.version }}"
+        imagePullPolicy: {{ .Values.images.mcc_rabbitmq.pullPolicy }}
+        resources: 
+{{- include "containerResources" . | indent 10 }}        
+        env:
+        - name: RABBITMQ_LOGS
+          value: "-"
+        volumeMounts:
+        - name: {{.Values.appname}}-rabbitmq
+          mountPath: /etc/rabbitmq/rabbitmq.conf
+          subPath: rabbitmq.conf
+      volumes:
+      - name: {{.Values.appname}}-rabbitmq
+        configMap:
+          name: {{.Values.appname}}-rabbitmq

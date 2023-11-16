@@ -1,0 +1,47 @@
+groups:
+  - name: "Storage"
+    description: "Configure Storage for Helmut4 Client"
+  
+
+questions:
+  - variable: extraAppVolumeMounts
+    label: "Helmut4 Host Path Volumes"
+    group: "Storage"
+    schema:
+      required: true
+      type: list
+      items:
+        - variable: extraAppVolume
+          label: "Helmut4 Host Path Volume"
+          description: "Add an extra host path volume for the Helmut4 application"
+          schema:
+            type: dict
+            attrs:
+              - variable: mountPath
+                label: "Mount Path in Helmut4"
+                description: "Path where the volume will be mounted inside Helmut4"
+                schema:
+                  type: path
+                  default: /Volumes/helmut
+                  description: Use MacOS style paths if you plan to use Helmut4 with MacOS
+                  required: true
+              - variable: hostPath
+                label: "Host Path"
+                description: "The path on your TrueNAS"
+                schema:
+                  type: hostpath
+                  required: true
+  - variable: extraAppVolumeMountsAutologin
+    label: "Helmut4 home folder containing a helmut.auto.login File"
+    group: "Storage"
+    description: "Add a home folder for Helmut4 Client that contains helmut.auto.login File"
+    schema:
+      type: dict
+      required: true
+      attrs:
+        - variable: hostPath
+          label: "Host Path"
+          description: "The path on your TrueNAS"
+          schema:
+            type: hostpath
+            required: true

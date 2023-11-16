@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.appname }}-mongoadmin
+  labels:
+    app: {{ .Values.appname }}
+    component: mongoadmin
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Values.appname }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.appname }}
+        component: mongoadmin
+    spec:
+      imagePullSecrets:
+      - name: public.repo.moovit24.de
+      hostAliases:
+      - ip: "127.0.0.1"
+        hostnames:
+        - "{{ .Values.appname }}-mongoadmin"            
+      containers:
+      - name: {{ .Values.appname }}-mongoadmin
+        image: "{{ .Values.images.mcc_mongodb_admin.name }}:{{ .Values.images.mcc_mongodb_admin.version }}"
+        imagePullPolicy: {{ .Values.images.mcc_mongodb_admin.pullPolicy }}
+        resources: 
+{{- include "containerResources" . | indent 10 }}        

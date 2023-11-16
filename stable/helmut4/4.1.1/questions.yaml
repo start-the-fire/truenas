@@ -1,0 +1,95 @@
+groups:
+  - name: "Storage"
+    description: "Configure Storage for Helmut4"
+  - name: "Port"
+    description: "Configure Helmut4 Port"
+  
+portals:
+  web_portal:
+    protocols:
+      - "http"
+    host:
+      - "$node_ip"
+    ports:
+      - "$variable-nodePorts.traefik.port"
+    path: "/"
+
+questions:
+  - variable: extraAppVolumeMounts
+    label: "Helmut4 Host Path Volumes"
+    group: "Storage"
+    schema:
+      required: true
+      type: list
+      items:
+        - variable: extraAppVolume
+          label: "Helmut4 Host Path Volume"
+          description: "Add an extra host path volume for the Helmut4 application"
+          schema:
+            type: dict
+            attrs:
+              - variable: mountPath
+                label: "Mount Path in Helmut4"
+                description: "Path where the volume will be mounted inside Helmut4"
+                schema:
+                  type: path
+                  default: /Volumes/helmut
+                  description: Use MacOS style paths if you plan to use Helmut4 with MacOS
+                  required: true
+              - variable: hostPath
+                label: "Host Path"
+                description: "The path on your TrueNAS"
+                schema:
+                  type: hostpath
+                  required: true
+  - variable: extraAppVolumeDatabase
+    label: "Helmut4 Database Path Volume"
+    group: "Storage"
+    description: "Add an extra host path volume for the Helmut4 Database"
+    schema:
+      type: dict
+      required: true
+      attrs:
+        - variable: hostPath
+          label: "Host Path"
+          description: "The path on your TrueNAS"
+          schema:
+            type: hostpath
+            required: true
+  - variable: extraAppVolumeDatabaseBackups
+    label: "Helmut4 Database Backups Path Volume"
+    group: "Storage"
+    description: "Add an extra host path volume for the Helmut4 Database backups"
+    schema:
+      type: dict
+      required: true
+      attrs:
+        - variable: hostPath
+          label: "Host Path"
+          description: "The path on your TrueNAS"
+          schema:
+            type: hostpath
+            required: true
+
+  - variable: nodePorts
+    description: "Networking Configuration"
+    label: "Port configuration for Helmut4"
+    group: "Port"
+    schema:
+      type: dict
+      required: true
+      attrs:
+        - variable: traefik
+          label: "Node Port to use for Helmut4"
+          schema:
+            required: true
+            type: dict
+            attrs:
+              - variable: port
+                label: "Node Port to use for Helmut4"
+                schema:
+                  type: int
+                  min: 9000
+                  max: 65535
+                  default: 9090
+                  required: true

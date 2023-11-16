@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.appname }}-cronjob
+  labels:
+    app: {{ .Values.appname }}
+    component: cronjob
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Values.appname }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.appname }}
+        component: cronjob
+    spec:
+      imagePullSecrets:
+      - name: public.repo.moovit24.de
+      hostAliases:
+      - ip: "127.0.0.1"
+        hostnames:
+        - "{{ .Values.appname }}-cronjob"      
+      containers:
+      - name: {{ .Values.appname }}-cronjob
+        image: "{{ .Values.images.mcc_cronjob.name }}:{{ .Values.images.mcc_cronjob.version }}"
+        imagePullPolicy: {{ .Values.images.mcc_cronjob.pullPolicy }}
+        resources: 
+{{- include "containerResources" . | indent 10 }}        
+{{- include "helmut.args" . | indent 8 }}        
+        env:
+        - name: parameters
+          value: |-           
+{{- include "helmut.env" . | indent 12}}

@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.appname }}-mongobackup
+  labels:
+    app: {{ .Values.appname }}
+    component: mongobackup
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Values.appname }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.appname }}
+        component: mongobackup
+    spec:
+      imagePullSecrets:
+      - name: public.repo.moovit24.de
+      hostAliases:
+      - ip: "127.0.0.1"
+        hostnames:
+        - "{{ .Values.appname }}-mongobackup"            
+      containers:
+      - name: {{ .Values.appname }}-mongobackup
+        image: "{{ .Values.images.mcc_mongodb_backup.name }}:{{ .Values.images.mcc_mongodb_backup.version }}"
+        imagePullPolicy: {{ .Values.images.mcc_mongodb_backup.pullPolicy }}
+        resources: 
+{{- include "containerResources" . | indent 10 }}        
+        env:
+        - name: MONGODB_HOST
+          value: "{{ .Values.appname}}-mongodb"
+        - name: MONGODB_PORT
+          value: "{{ .Values.mongodbSettings.port }}"
+        - name: MONGODB_USER
+          value: "{{ .Values.mongodbSettings.username }}"
+        - name: MONGODB_PASS
+          value: "{{ .Values.mongodbSettings.password }}"
+        - name: CRON_TIME
+          value: "{{ .Values.mongodbSettings.backup.CRON_TIME }}"
+        - name: MAX_BACKUPS
+          value: "{{ .Values.mongodbSettings.backup.MAX_BACKUPS }}"
+        - name: INIT_BACKUP
+          value: "{{ .Values.mongodbSettings.backup.INIT_BACKUP }}"
+        volumeMounts: {{ include "common.storage.configureAppVolumeMountsInContainer" .Values | nindent 12 }}
+        - mountPath: /backup
+          name: mongodb-backup
+      volumes: {{ include "common.storage.configureAppVolumes" .Values | nindent 8 }}
+        - name: mongodb-backup
+          hostPath:
+            path: {{ .Values.extraAppVolumeDatabaseBackups.hostPath }}          

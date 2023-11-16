@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.appname }}-amqp
+  labels:
+    app: {{ .Values.appname }}
+    component: amqp
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Values.appname }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.appname }}
+        component: amqp
+    spec:
+      imagePullSecrets:
+      - name: public.repo.moovit24.de
+      hostAliases:
+      - ip: "127.0.0.1"
+        hostnames:
+        - "{{ .Values.appname }}-amqp"
+      containers:
+      - name: {{ .Values.appname }}-amqp
+        image: "{{ .Values.images.mcc_amqp.name }}:{{ .Values.images.mcc_amqp.version }}"
+        imagePullPolicy: {{ .Values.images.mcc_amqp.pullPolicy }}
+        resources: 
+{{- include "containerResources" . | indent 10 }}
+{{- include "helmut.args" . | indent 8 }}
+        env:
+        - name: parameters
+          value: |-                     
+{{- include "helmut.env" . | indent 12}}

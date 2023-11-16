@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.appname }}-preferences
+  labels:
+    app: {{ .Values.appname }}
+    component: preferences
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Values.appname }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.appname }}
+        component: preferences
+    spec:
+      imagePullSecrets:
+      - name: public.repo.moovit24.de
+      hostAliases:
+      - ip: "127.0.0.1"
+        hostnames:
+        - "{{ .Values.appname }}-preferences"            
+      containers:
+      - name: {{ .Values.appname }}-preferences
+        image: "{{ .Values.images.mcc_preferences.name }}:{{ .Values.images.mcc_preferences.version }}"
+        imagePullPolicy: {{ .Values.images.mcc_preferences.pullPolicy }}
+        resources: 
+{{- include "containerResources" . | indent 10 }}        
+{{- include "helmut.args" . | indent 8 }}        
+        env:
+        - name: parameters
+          value: |-           
+{{- include "helmut.env" . | indent 12}}
